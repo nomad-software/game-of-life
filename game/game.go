@@ -43,23 +43,17 @@ func NewGame(width int, height int) Game {
 
 // Incubate creates the next generation.
 func (g *Game) Incubate() {
-	var cell rune
-	var neighbour rune
-	var neighbours int
-	var x2 int
-	var y2 int
-
 	for y := 0; y < g.height; y++ {
 		for x := 0; x < g.width; x++ {
-			cell = g.buffer[x][y]
-			neighbours = 0
+			cell := g.buffer[x][y]
+			neighbours := 0
 
 			for _, pos := range neighbourhood {
-				x2 = x + pos[0]
-				y2 = y + pos[1]
+				x2 := x + pos[0]
+				y2 := y + pos[1]
 
 				if x2 >= 0 && x2 < g.width && y2 >= 0 && y2 < g.height {
-					neighbour = g.buffer[x2][y2]
+					neighbour := g.buffer[x2][y2]
 					if neighbour == alive {
 						neighbours++
 					}
