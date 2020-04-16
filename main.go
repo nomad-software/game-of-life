@@ -9,9 +9,7 @@ import (
 
 func main() {
 	term := term.NewTerm()
-	width, height := term.Size()
-
-	game := game.NewGame(width, height)
+	game := game.NewGame(term.Width, term.Height)
 
 	signal := make(chan bool)
 	term.HandleInput(signal)
@@ -24,7 +22,7 @@ lifecycle:
 		select {
 		case <-signal:
 			break lifecycle
-		case <-time.After(time.Millisecond * 100):
+		case <-time.After(time.Second / 20):
 		}
 	}
 	term.Destroy()

@@ -9,7 +9,9 @@ import (
 
 // Term is the main terminal.
 type Term struct {
-	tcell tcell.Screen
+	tcell  tcell.Screen
+	Width  int
+	Height int
 }
 
 // NewTerm contructs a new terminal.
@@ -27,42 +29,37 @@ func NewTerm() Term {
 	}
 
 	tc.SetStyle(tcell.StyleDefault.Foreground(tcell.ColorTeal))
+	width, height := tc.Size()
 
 	s := Term{
-		tcell: tc,
+		tcell:  tc,
+		Width:  width,
+		Height: height,
 	}
 
 	return s
 }
 
-// Size returns the size of the terminal.
-func (s *Term) Size() (int, int) {
-	return s.tcell.Size()
-}
-
 // Display displays the passed runes onto the terminal.
-func (s *Term) Display(buffer [][]rune) {
-	width := len(buffer)
-	height := len(buffer[0])
-
-	for y := 0; y < height; y++ {
-		for x := 0; x < width; x++ {
-			s.tcell.SetContent(x, y, buffer[x][y], nil, tcell.StyleDefault)
+func (t *Term) Display(buffer [][]rune) {
+	for y := 0; y < t.Height; y++ {
+		for x := 0; x < t.Width; x++ {
+			t.tcell.SetContent(x, y, buffer[x][y], nil, tcell.StyleDefault)
 		}
 	}
-	s.tcell.Show()
+	t.tcell.Show()
 }
 
 // Destroy closes the terminal display and shows the original display.
-func (s *Term) Destroy() {
-	s.tcell.Fini()
+func (t *Term) Destroy() {
+	t.tcell.Fini()
 }
 
 // HandleInput waits for key presses and takes the appropriate action.
-func (s *Term) HandleInput(signal chan bool) {
+func (t *Term) HandleInput(signal chan bool) {
 	go func() {
 		for {
-			ev := s.tcell.PollEvent()
+			ev := t.tcell.PollEvent()
 			switch ev := ev.(type) {
 			case *tcell.EventKey:
 				switch ev.Key() {
@@ -70,10 +67,10 @@ func (s *Term) HandleInput(signal chan bool) {
 					close(signal)
 					return
 				case tcell.KeyCtrlL:
-					s.tcell.Sync()
+					t.tcell.Sync()
 				}
 			case *tcell.EventResize:
-				s.tcell.Sync()
+				t.tcell.Sync()
 			}
 		}
 	}()
