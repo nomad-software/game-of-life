@@ -40,13 +40,25 @@ func NewTerm() Term {
 	return s
 }
 
-// Display displays the passed runes onto the terminal.
-func (t *Term) Display(buffer [][]rune) {
+// Draw displays the passed runes onto the terminal.
+func (t *Term) Draw(buffer [][]rune) {
 	for y := 0; y < t.Height; y++ {
 		for x := 0; x < t.Width; x++ {
 			t.tcell.SetContent(x, y, buffer[x][y], nil, tcell.StyleDefault)
 		}
 	}
+}
+
+// DrawText draws text on the terminal.
+func (t *Term) DrawText(x int, y int, text string) {
+	for _, r := range text {
+		t.tcell.SetContent(x, y, r, nil, tcell.StyleDefault.Foreground(tcell.ColorGreen))
+		x++
+	}
+}
+
+// Update commits all changes to the terminal display.
+func (t *Term) Update() {
 	t.tcell.Show()
 }
 

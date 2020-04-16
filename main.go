@@ -17,7 +17,8 @@ func main() {
 lifecycle:
 	for {
 		game.Incubate()
-		term.Display(game.View())
+		term.Draw(game.View())
+		term.Update()
 
 		select {
 		case <-signal:
