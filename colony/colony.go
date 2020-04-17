@@ -10,7 +10,7 @@ var (
 
 const (
 	alive = '#'
-	dead  = ' '
+	dead  = 0
 )
 
 // Colony is the main game.

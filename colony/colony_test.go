@@ -7,7 +7,6 @@ import (
 func BenchmarkSeeder(b *testing.B) {
 	game := New(200, 60)
 
-	b.SetBytes(200 * 60 * 4)
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -19,7 +18,6 @@ func BenchmarkSeeder(b *testing.B) {
 func BenchmarkIncubation(b *testing.B) {
 	game := New(200, 60)
 
-	b.SetBytes(200 * 60 * 4)
 	b.ReportAllocs()
 	b.ResetTimer()
 
