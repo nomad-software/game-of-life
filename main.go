@@ -3,25 +3,25 @@ package main
 import (
 	"time"
 
-	"github.com/nomad-software/game-of-life/game"
+	"github.com/nomad-software/game-of-life/colony"
 	"github.com/nomad-software/game-of-life/term"
 )
 
 func main() {
-	term := term.NewTerm()
-	game := game.NewGame(term.Width, term.Height)
+	term := term.New()
+	colony := colony.New(term.Width, term.Height)
 
-	signal := make(chan bool)
-	term.HandleInput(signal)
+	destroy := make(chan bool)
+	term.HandleInput(destroy)
 
 lifecycle:
 	for {
-		game.Incubate()
-		term.Draw(game.View())
+		colony.Incubate()
+		term.Draw(colony.View())
 		term.Update()
 
 		select {
-		case <-signal:
+		case <-destroy:
 			break lifecycle
 		case <-time.After(time.Second / 20):
 		}

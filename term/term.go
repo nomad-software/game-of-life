@@ -14,8 +14,8 @@ type Term struct {
 	Height int
 }
 
-// NewTerm contructs a new terminal.
-func NewTerm() Term {
+// New contructs a new terminal.
+func New() Term {
 	tc, err := tcell.NewScreen()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err.Error())

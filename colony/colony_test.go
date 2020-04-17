@@ -1,11 +1,11 @@
-package game
+package colony
 
 import (
 	"testing"
 )
 
-func BenchmarkSeeding(b *testing.B) {
-	game := NewGame(200, 60)
+func BenchmarkSeeder(b *testing.B) {
+	game := New(200, 60)
 
 	b.SetBytes(200 * 60 * 4)
 	b.ReportAllocs()
@@ -17,7 +17,7 @@ func BenchmarkSeeding(b *testing.B) {
 }
 
 func BenchmarkIncubation(b *testing.B) {
-	game := NewGame(200, 60)
+	game := New(200, 60)
 
 	b.SetBytes(200 * 60 * 4)
 	b.ReportAllocs()
