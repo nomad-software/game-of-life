@@ -2,6 +2,7 @@ package colony
 
 import (
 	"math/rand"
+	"time"
 )
 
 var (
@@ -9,8 +10,8 @@ var (
 )
 
 const (
-	alive = '#'
-	dead  = 0
+	Alive = '#'
+	Dead  = 0
 )
 
 // Colony is the main game.
@@ -22,8 +23,8 @@ type Colony struct {
 }
 
 // New contructs a new game.
-func New(width int, height int) Colony {
-	g := Colony{
+func New(width int, height int) *Colony {
+	g := &Colony{
 		width:     width,
 		height:    height,
 		substrate: make([][]rune, width),
@@ -38,6 +39,16 @@ func New(width int, height int) Colony {
 	g.Seed()
 
 	return g
+}
+
+// Width returns the width of the colony.
+func (g *Colony) Width() int {
+	return g.width
+}
+
+// Height returns the height of the colony.
+func (g *Colony) Height() int {
+	return g.height
 }
 
 // Incubate creates the next generation.
@@ -67,18 +78,25 @@ func (g *Colony) Incubate() {
 					y2 = 0
 				}
 
-				if g.output[x2][y2] == alive {
+				if g.output[x2][y2] == Alive {
 					neighbours++
 				}
 			}
 
-			// The rules of survival.
+			// The three standard rules of survival of Conway's game of life.
+			// https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 			if neighbours == 3 {
-				g.substrate[x][y] = alive
-			} else if g.output[x][y] == alive && neighbours == 2 {
-				g.substrate[x][y] = alive
+				g.substrate[x][y] = Alive
+			} else if g.output[x][y] == Alive && neighbours == 2 {
+				g.substrate[x][y] = Alive
 			} else {
-				g.substrate[x][y] = dead
+				g.substrate[x][y] = Dead
+			}
+
+			// This is not a standard rule but I added it to prevent the colony
+			// from stagnating.
+			if neighbours == 1 && rand.Intn(1000) == 500 {
+				g.substrate[x][y] = Alive
 			}
 		}
 	}
@@ -94,7 +112,8 @@ func (g *Colony) View() [][]rune {
 
 // Seed randomises the game cells.
 func (g *Colony) Seed() {
+	rand.Seed(time.Now().Unix())
 	for i := 0; i < (g.width * g.height / 4); i++ {
-		g.output[rand.Intn(g.width)][rand.Intn(g.height)] = alive
+		g.output[rand.Intn(g.width)][rand.Intn(g.height)] = Alive
 	}
 }
