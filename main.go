@@ -3,8 +3,8 @@ package main
 import (
 	"time"
 
-	"github.com/nomad-software/game-of-life/colony"
 	"github.com/nomad-software/game-of-life/term"
+	"github.com/nomad-software/screensaver/screen/saver/game_of_life/colony"
 )
 
 func main() {

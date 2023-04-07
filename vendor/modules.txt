@@ -56,9 +56,13 @@ github.com/gdamore/tcell/terminfo/x/xterm_kitty
 github.com/lucasb-eyer/go-colorful
 # github.com/mattn/go-runewidth v0.0.4
 github.com/mattn/go-runewidth
-# golang.org/x/sys v0.0.0-20190626150813-e07cf5db2756
+# github.com/nomad-software/screensaver v0.0.0-20230219131755-0fe260e6e68e
+## explicit
+github.com/nomad-software/screensaver/screen/saver/game_of_life/colony
+# golang.org/x/sys v0.0.0-20220818161305-2296e01440c6
+golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
-# golang.org/x/text v0.3.0
+# golang.org/x/text v0.3.7
 golang.org/x/text/encoding
 golang.org/x/text/encoding/internal/identifier
 golang.org/x/text/transform

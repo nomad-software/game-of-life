@@ -2,11 +2,15 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build !go1.10
 // +build !go1.10
 
 package precis
 
 import (
+	"strings"
+
+	"golang.org/x/text/runes"
 	"golang.org/x/text/secure/bidirule"
 )
 
@@ -240,5 +244,11 @@ var enforceTestCases = []struct {
 		{"\uFB00", "", errDisallowedRune},
 		{"\u212B", "\u00c5", nil},    // Angstrom sign, NFC -> U+00E5
 		{"ẛ", "", errDisallowedRune}, // LATIN SMALL LETTER LONG S WITH DOT ABOVE
+	}},
+	{"UsernameCaseMappedRestricted", NewRestrictedProfile(UsernameCaseMapped, runes.Predicate(func(r rune) bool {
+		return strings.ContainsRune(`@`, r)
+	})), []testCase{
+		{"juliet@example.com", "", errDisallowedRune},
+		{"\u0049", "\u0069", nil},
 	}},
 }

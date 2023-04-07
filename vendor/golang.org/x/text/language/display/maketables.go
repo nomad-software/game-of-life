@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build ignore
 // +build ignore
 
 // Generator for display name tables.
@@ -414,7 +415,7 @@ func (b *builder) writeGroup(name string) {
 		index = index[:n]
 
 		// Workaround for a bug in CLDR 26.
-		// See http://unicode.org/cldr/trac/ticket/8042.
+		// See https://unicode.org/cldr/trac/ticket/8042.
 		if cldr.Version == "26" && sup.String() == "hsb" {
 			data = bytes.Replace(data, []byte{'"'}, nil, 1)
 		}

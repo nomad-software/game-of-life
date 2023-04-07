@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build ignore
 // +build ignore
 
 // This program generates the trie for casing operations. The Unicode casing
@@ -335,7 +336,7 @@ func makeException(ri *runeInfo) {
 	ri.entry |= exceptionBit
 
 	if len(exceptionData) >= 1<<numExceptionBits {
-		log.Fatalf("%U:exceptionData too large %x > %d bits", ri.Rune, len(exceptionData), numExceptionBits)
+		log.Fatalf("%U:exceptionData too large %#x > %d bits", ri.Rune, len(exceptionData), numExceptionBits)
 	}
 
 	// Set the offset in the exceptionData array.
@@ -355,7 +356,7 @@ func makeException(ri *runeInfo) {
 			log.Fatalf("%U: has zero-length mapping.", ri.Rune)
 		}
 		*b <<= 3
-		if s != orig {
+		if s != orig || ri.CaseMode == cLower {
 			n := len(s)
 			if n > 7 {
 				log.Fatalf("%U: mapping larger than 7 (%d)", ri.Rune, n)
@@ -384,12 +385,6 @@ func makeException(ri *runeInfo) {
 		addString(uc, &exceptionData[p])
 	}
 	if ct != cTitle {
-		// If title is the same as upper, we set it to the original string so
-		// that it will be marked as not present. This implies title case is
-		// the same as upper case.
-		if tc == uc {
-			tc = orig
-		}
 		addString(tc, &exceptionData[p])
 	}
 }

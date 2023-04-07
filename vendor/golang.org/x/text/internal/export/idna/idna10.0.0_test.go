@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build go1.10
 // +build go1.10
 
 package idna
@@ -10,7 +11,7 @@ import "testing"
 
 // TestLabelErrors tests strings returned in case of error. All results should
 // be identical to the reference implementation and can be verified at
-// http://unicode.org/cldr/utility/idna.jsp. The reference implementation,
+// https://unicode.org/cldr/utility/idna.jsp. The reference implementation,
 // however, seems to not display Bidi and ContextJ errors.
 //
 // In some cases the behavior of browsers is added as a comment. In all cases,
@@ -31,6 +32,8 @@ func TestLabelErrors(t *testing.T) {
 	lengthA := kind{"CheckLengthA", p.ToASCII}
 	p = New(MapForLookup(), StrictDomainName(false))
 	std3 := kind{"STD3", p.ToASCII}
+	p = New(MapForLookup(), CheckHyphens(false))
+	hyphens := kind{"CheckHyphens", p.ToASCII}
 
 	testCases := []struct {
 		kind
@@ -84,6 +87,12 @@ func TestLabelErrors(t *testing.T) {
 		// STD3 rules
 		{display, "*.foo.com", "*.foo.com", "P1"},
 		{std3, "*.foo.com", "*.foo.com", ""},
+
+		// Hyphens
+		{display, "r3---sn-apo3qvuoxuxbt-j5pe.googlevideo.com", "r3---sn-apo3qvuoxuxbt-j5pe.googlevideo.com", "V2"},
+		{hyphens, "r3---sn-apo3qvuoxuxbt-j5pe.googlevideo.com", "r3---sn-apo3qvuoxuxbt-j5pe.googlevideo.com", ""},
+		{display, "-label-.com", "-label-.com", "V3"},
+		{hyphens, "-label-.com", "-label-.com", ""},
 
 		// Don't map U+2490 (DIGIT NINE FULL STOP). This is the behavior of
 		// Chrome, Safari, and IE. Firefox will first map ⒐ to 9. and return

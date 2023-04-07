@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build darwin,amd64 darwin,386 dragonfly freebsd linux solaris
+//go:build (darwin && amd64) || dragonfly || freebsd || linux || solaris
+// +build darwin,amd64 dragonfly freebsd linux solaris
 
 package unix_test
 
@@ -41,10 +42,15 @@ func TestSendfile(t *testing.T) {
 	go func() {
 		conn, err := ln.Accept()
 		if err != nil {
-			t.Fatal(err)
+			t.Errorf("failed to accept: %v", err)
+			return
 		}
 		defer conn.Close()
 		b, err := ioutil.ReadAll(conn)
+		if err != nil {
+			t.Errorf("failed to read: %v", err)
+			return
+		}
 		if string(b) != contents {
 			t.Errorf("contents not transmitted: got %s (len=%d), want %s", string(b), len(b), contents)
 		}
